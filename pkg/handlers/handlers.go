@@ -3,13 +3,40 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/buscaroli/secondGoWebApp/pkg/config"
+	"github.com/buscaroli/secondGoWebApp/pkg/models"
 	"github.com/buscaroli/secondGoWebApp/pkg/render"
 )
 
-func Home(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "home.page.html")
+// repository used by the handlers
+var Repo *Repository
+
+// repository type
+type Repository struct {
+	App *config.AppConfig
 }
 
-func About(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "about.page.html")
+// creates a new repository
+func NewRepo(a *config.AppConfig) *Repository {
+	return &Repository{
+		App: a,
+	}
+}
+
+// Sets the repository for the handlers
+func NewHandlers(r *Repository) {
+	Repo = r
+}
+
+func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, "home.page.html", &models.TemplateData{})
+}
+
+func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
+	// forform logic here
+	stringMap := make(map[string]string)
+	stringMap["test"] = "Hello there!"
+
+	// send the data to the template and render it
+	render.RenderTemplate(w, "about.page.html", &models.TemplateData{StringMap: stringMap})
 }

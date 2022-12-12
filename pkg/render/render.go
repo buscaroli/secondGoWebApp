@@ -8,6 +8,7 @@ import (
 	"text/template"
 
 	"github.com/buscaroli/secondGoWebApp/pkg/config"
+	"github.com/buscaroli/secondGoWebApp/pkg/models"
 )
 
 var app *config.AppConfig
@@ -17,9 +18,19 @@ func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
-func RenderTemplate(w http.ResponseWriter, tmpl string) {
-	// get the templates cache from app config
-	tc := app.TemplateCache
+func AddDefaultData(td *models.TemplateData) *models.TemplateData {
+	return td
+}
+
+func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
+	var tc map[string]*template.Template
+
+	if app.UseCache {
+		// get the templates cache from app config
+		tc = app.TemplateCache
+	} else {
+		tc, _ = CreateTemplateCache()
+	}
 
 	// get requested template from cache
 	t, ok := tc[tmpl]
@@ -30,7 +41,9 @@ func RenderTemplate(w http.ResponseWriter, tmpl string) {
 	// creating a buffer for easier error debugging
 	buf := new(bytes.Buffer)
 
-	_ = t.Execute(buf, nil)
+	td = AddDefaultData(td)
+
+	_ = t.Execute(buf, td)
 
 	//render the template
 	_, err := buf.WriteTo(w)
