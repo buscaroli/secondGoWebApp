@@ -34,9 +34,18 @@ func main() {
 	// the next line allows us to access the config from within the render package
 	render.NewTemplates(&app)
 
-	http.HandleFunc("/", handlers.Repo.Home)
-	http.HandleFunc("/about", handlers.Repo.About)
+	// http.HandleFunc("/", handlers.Repo.Home)
+	// http.HandleFunc("/about", handlers.Repo.About)
+
+	// http.ListenAndServe(port, nil)
 
 	fmt.Println("Server up and running on port", port)
-	http.ListenAndServe(port, nil)
+	srv := &http.Server{
+		Addr:    port,
+		Handler: routes(&app),
+	}
+
+	err = srv.ListenAndServe()
+	log.Fatal(err)
+
 }
