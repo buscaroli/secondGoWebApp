@@ -61,19 +61,22 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 		return myCache, err
 	}
 
-	// range through all files ending with *.page.html
+	// range through all files ending with *.page.html (collected with the previous loop)
 	for _, page := range pages {
 		name := filepath.Base(page)
+		// Create the template associated with the given filename
 		ts, err := template.New(name).ParseFiles(page)
 		if err != nil {
 			return myCache, err
 		}
 
+		// get all the layout files
 		matches, err := filepath.Glob("./templates/*.layout.html")
 		if err != nil {
 			return myCache, err
 		}
 
+		// if there is at least one layout file use it together with the page layout to create a full page, if not skip this step as ts is already a full page (with no dynamic content)
 		if len(matches) > 0 {
 			ts, err = ts.ParseGlob("./templates/*.layout.html")
 			if err != nil {
