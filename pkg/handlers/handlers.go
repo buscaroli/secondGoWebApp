@@ -28,10 +28,12 @@ func NewHandlers(r *Repository) {
 	Repo = r
 }
 
+// handler method on the Repository struct
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, "home.page.html", &models.TemplateData{})
 }
 
+// handler method on the Repository struct
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 	// forform logic here
 	stringMap := make(map[string]string)
