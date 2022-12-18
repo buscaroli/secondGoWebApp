@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
+	"github.com/alexedwards/scs/v2"
 	"github.com/buscaroli/secondGoWebApp/pkg/config"
 	"github.com/buscaroli/secondGoWebApp/pkg/handlers"
 	"github.com/buscaroli/secondGoWebApp/pkg/render"
@@ -12,8 +14,22 @@ import (
 
 const port = ":8080"
 
+// making app and session available to the entire main package
+var app config.AppConfig
+var session *scs.SessionManager
+
 func main() {
-	var app config.AppConfig
+	// set to true once deploying for production
+	app.IsProduction = false
+
+	session = scs.New()
+	session.Lifetime = 24 * time.Hour // default is 24h
+	session.Cookie.Persist = true     // persist after closing browser
+	session.Cookie.SameSite = http.SameSiteLaxMode
+	session.Cookie.Secure = app.IsProduction // set true in production
+
+	// adding session to the Repo in order to access it app wide
+	app.Session = session
 
 	// create the templates for every page and save them into a cache
 	tc, err := render.CreateTemplateCache()

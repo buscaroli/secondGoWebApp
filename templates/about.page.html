@@ -4,6 +4,12 @@
     <div class="col">
       <h1>About Page</h1>
       <p>Data is: {{index .StringMap "test"}}</p>
+
+      <p>
+        {{ if ne (index .StringMap "remote_ip") "" }} Remote IP: {{index
+        .StringMap "remote_ip"}} {{else}} You haven't visited the Homepage yet!
+        {{end}}
+      </p>
     </div>
   </div>
 </div>
