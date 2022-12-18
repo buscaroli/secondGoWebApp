@@ -41,7 +41,7 @@ func main() {
 	app.TemplateCache = tc
 
 	// In development mode set to false so any change to a template will be reflected in the browser without having to restart the server
-	app.UseCache = true
+	app.UseCache = app.IsProduction
 
 	// the next two lines allows us to access the config from within the handlers package
 	repo := handlers.NewRepo(&app)

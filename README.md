@@ -1,6 +1,6 @@
 # WebApp in Go(lang)
 
-## What is this
+## What is this?
 
 I am learning Go, in particular I am following along Trevor Sawler's lessons to get an idea of:
 
